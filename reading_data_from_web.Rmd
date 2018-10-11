@@ -63,3 +63,49 @@ nyc_cost = read_html("https://www.bestplaces.net/cost_of_living/city/new_york/ne
   html_table(header = TRUE) # header = TRUE = first row is column names
 ```
 
+## Harry Potter
+
+Let's get some Potter data! 
+```{r hp_saga}
+hpsaga_html = read_html("https://www.imdb.com/list/ls000630791/")
+# getting title and how much money each movie made but information doesn't exist inside
+# table 
+
+titles = hpsaga_html %>% 
+  html_nodes(css = ".lister-item-header a") %>% 
+  html_text() # looks more like text than table
+
+money = hpsaga_html %>% 
+  html_nodes(css = ".text-small:nth-child(7) span:nth-child(5)") %>% 
+  html_text()
+
+hpsaga_df = tibble(
+  title = titles,
+  gross_rev = money
+)
+```
+
+Learning Assessment #2
+
+```{r learning_assessment_2}
+nd_review_html = read_html("https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1")
+
+review_title = nd_review_html %>% 
+  html_nodes(css = "#cm_cr-review_list .review-title") %>% 
+  html_text()
+
+review_star = nd_review_html %>% 
+  html_nodes(css = "#cm_cr-review_list .review-rating") %>% 
+  html_text
+
+review_text = nd_review_html %>% 
+  html_nodes(css = ".review-text") %>% 
+  html_text
+
+nd_df = tibble(
+  title = review_title,
+  rating = review_star,
+  text = review_text
+)
+```
+
