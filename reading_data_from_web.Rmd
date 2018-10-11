@@ -28,14 +28,14 @@ library(httr)
 
 First get the HTML
 
-```{r}
+```{r url_HTML}
 url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
 
 drug_use_xml = read_html(url)
 ```
 
 Get the tables from the HTML
-```{r}
+```{r tables_HTML}
 drug_use_xml %>%
   html_nodes(css = "table") %>% 
       # We have something that looks like piece of HTML code
@@ -51,5 +51,15 @@ drug_use_xml %>%
       # we don't want to filter rows by row # just in case we change and add data later
       # prefer to use filter
   as_tibble()
+
+# data isn't tidy yet... BUT we have data inside R
+```
+
+## Learning Assessment #1
+```{r learning_assessment_1}
+nyc_cost = read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
+  html_nodes(css = "table") %>% 
+  .[[1]] %>% 
+  html_table(header = TRUE) # header = TRUE = first row is column names
 ```
 
