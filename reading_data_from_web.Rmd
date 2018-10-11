@@ -1,0 +1,55 @@
+---
+title: 'Lecture #12'
+author: "Ashley Kang"
+date: "10/11/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
+
+
+```
+
+```{r}
+library(rvest)
+library(httr)
+```
+
+## Scraping Table
+
+First get the HTML
+
+```{r}
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+drug_use_xml = read_html(url)
+```
+
+Get the tables from the HTML
+```{r}
+drug_use_xml %>%
+  html_nodes(css = "table") %>% 
+      # We have something that looks like piece of HTML code
+      # We have things like table but we have 15 of them (we have tables 1 - 15)
+      # But now we have too much stuff
+  .[[1]] %>% # adding "list" - [[1]] give me first element (table)
+      # we see "table 1, marijuana use in past year" - we have right thing
+  html_table() %>%  # converting html code into table
+      # View looks almost right
+  slice(-1) %>% 
+      # only case we use slice - bad function; slice lets us access rows of dataset by   
+      # number
+      # we don't want to filter rows by row # just in case we change and add data later
+      # prefer to use filter
+  as_tibble()
+```
+
